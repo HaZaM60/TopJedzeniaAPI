@@ -40,9 +40,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'author')]
     private Collection $receipts;
 
+    #[ORM\Column(length: 255)]
+    private ?string $login = null;
+
     public function __construct()
     {
         $this->receipts = new ArrayCollection();
+        $this->setRoles(["ROLE_USER"]);
     }
 
     public function getId(): ?int
@@ -146,6 +150,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $receipt->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(string $login): static
+    {
+        $this->login = $login;
 
         return $this;
     }
